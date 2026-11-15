@@ -1,0 +1,503 @@
+:root {
+  --rose: #e75480;
+  --rose-dark: #c94f73;
+  --rose-soft: #fce3ec;
+  --plum: #5a3d52;
+  --plum-soft: #8a6a7c;
+  --cream: #fffaf4;
+  --paper: #fffdf9;
+  --ink: #46323f;
+  --gold: #e6b15c;
+  --shadow: rgba(201, 79, 115, 0.18);
+  --radius: 18px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Quicksand", system-ui, sans-serif;
+  color: var(--ink);
+  line-height: 1.7;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 90% -10%, rgba(231, 84, 128, 0.14), transparent 60%),
+    radial-gradient(1000px 600px at -10% 110%, rgba(230, 177, 92, 0.12), transparent 60%),
+    linear-gradient(180deg, #fff6ef, var(--cream));
+  overflow-x: hidden;
+}
+
+/* ---------- Floating hearts ---------- */
+.floaters {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floaters svg {
+  position: absolute;
+  top: -40px;
+  opacity: 0;
+  animation: floatDown linear infinite;
+  filter: drop-shadow(0 2px 6px rgba(231, 84, 128, 0.15));
+}
+
+@keyframes floatDown {
+  0% {
+    transform: translateY(-60px) rotate(0deg) scale(var(--s, 1));
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--o, 0.5);
+  }
+  90% {
+    opacity: var(--o, 0.5);
+  }
+  100% {
+    transform: translateY(105vh) rotate(340deg) scale(var(--s, 1));
+    opacity: 0;
+  }
+}
+
+/* ---------- Envelope ---------- */
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
+}
+
+.scene.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.envelope {
+  position: relative;
+  width: min(360px, 88vw);
+  height: 240px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.envelope__name {
+  position: absolute;
+  top: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  color: var(--plum);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.envelope__hint {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-size: 0.82rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--plum-soft);
+  pointer-events: none;
+  animation: hintPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.envelope__flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 128px;
+  background: linear-gradient(160deg, #f4a7c0, #e75480);
+  clip-path: polygon(0 0, 100% 0, 50% 96%);
+  transform-origin: top center;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  box-shadow: 0 6px 18px rgba(201, 79, 115, 0.25);
+}
+
+.envelope__letter {
+  position: absolute;
+  bottom: 14px;
+  left: 8px;
+  right: 8px;
+  height: 150px;
+  background: linear-gradient(180deg, var(--paper), #fbf3ea);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(90, 61, 82, 0.18);
+  z-index: 1;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  background-image:
+    linear-gradient(var(--rose-soft), var(--rose-soft)) no-repeat 50% 22% / 60% 3px,
+    linear-gradient(var(--rose-soft), var(--rose-soft)) no-repeat 50% 38% / 80% 3px,
+    linear-gradient(var(--rose-soft), var(--rose-soft)) no-repeat 50% 54% / 72% 3px,
+    linear-gradient(var(--rose-soft), var(--rose-soft)) no-repeat 50% 70% / 84% 3px;
+}
+
+.envelope__seal {
+  position: absolute;
+  top: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f7b3c9, var(--rose) 70%);
+  box-shadow: 0 6px 16px rgba(201, 79, 115, 0.45);
+  display: grid;
+  place-items: center;
+  transition: transform 0.6s, opacity 0.6s;
+}
+
+.envelope__seal svg {
+  width: 26px;
+  height: 26px;
+  fill: var(--paper);
+}
+
+.envelope__seal::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: sealGlow 2.4s ease-in-out infinite;
+}
+
+@keyframes sealGlow {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+.envelope.open .envelope__flap {
+  transform: rotateX(180deg);
+  z-index: 0;
+}
+
+.envelope.open .envelope__letter {
+  transform: translateY(-148px);
+}
+
+.envelope.open .envelope__seal {
+  transform: translateX(-50%) translateY(-14px);
+  opacity: 0;
+}
+
+/* ---------- Letter ---------- */
+.letter {
+  position: relative;
+  z-index: 2;
+  display: none;
+  justify-content: center;
+  padding: 48px 20px 80px;
+}
+
+.letter.visible {
+  display: flex;
+  animation: letterIn 1s ease both;
+}
+
+@keyframes letterIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: none; }
+}
+
+.letter__paper {
+  max-width: 760px;
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid rgba(231, 84, 128, 0.22);
+  border-radius: 22px;
+  box-shadow: 0 30px 80px var(--shadow);
+  padding: clamp(28px, 6vw, 64px);
+  position: relative;
+  overflow: hidden;
+}
+
+.letter__paper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(90deg, var(--gold), var(--rose), var(--gold));
+}
+
+.letter__head {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.letter__greeting {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.7rem, 5vw, 2.6rem);
+  color: var(--plum);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.letter__type {
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(1.3rem, 3.6vw, 1.8rem);
+  color: var(--rose-dark);
+  min-height: 2.4em;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.letter__intro {
+  color: var(--plum-soft);
+  max-width: 560px;
+  margin: 20px auto 0;
+}
+
+/* ---------- Reasons flip cards ---------- */
+.reasons {
+  margin: 56px 0;
+  text-align: center;
+}
+
+.reasons__title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: var(--plum);
+  margin-bottom: 10px;
+}
+
+.reasons__grid {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  text-align: left;
+}
+
+.flip {
+  perspective: 900px;
+  height: 170px;
+}
+
+.flip__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flip.flipped .flip__inner {
+  transform: rotateY(180deg);
+}
+
+.flip__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+  border: 1px solid rgba(231, 84, 128, 0.25);
+}
+
+.flip__front {
+  background: linear-gradient(160deg, #fff, #fff2f6);
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 10px 26px rgba(90, 61, 82, 0.1);
+}
+
+.flip__front svg {
+  width: 34px;
+  height: 34px;
+  fill: var(--rose);
+}
+
+.flip__num {
+  font-family: "Playfair Display", serif;
+  font-size: 1.4rem;
+  color: var(--rose);
+}
+
+.flip__prompt {
+  font-size: 0.8rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--plum-soft);
+}
+
+.flip__back {
+  background: linear-gradient(160deg, var(--rose), var(--rose-dark));
+  color: var(--paper);
+  transform: rotateY(180deg);
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 10px 26px var(--shadow);
+}
+
+/* ---------- Heart meter ---------- */
+.meter {
+  text-align: center;
+  margin: 56px 0;
+  padding: 34px 22px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(600px 200px at 50% 0%, rgba(231, 84, 128, 0.1), transparent 70%),
+    #fff7f2;
+  border: 1px solid rgba(231, 84, 128, 0.18);
+}
+
+.meter__title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: var(--plum);
+  margin-bottom: 20px;
+}
+
+.meter__hearts {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.meter__hearts svg {
+  width: 30px;
+  height: 30px;
+  fill: #ecd3de;
+  transition: fill 0.3s, transform 0.3s;
+}
+
+.meter__hearts svg.lit {
+  fill: var(--rose);
+  transform: scale(1.08);
+  filter: drop-shadow(0 2px 6px var(--shadow));
+}
+
+.meter__text {
+  min-height: 2em;
+  color: var(--plum-soft);
+  font-size: 1.05rem;
+  margin-bottom: 18px;
+}
+
+.meter__btn {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 13px 30px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--rose), var(--rose-dark));
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 24px var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.meter__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(201, 79, 115, 0.35);
+}
+
+.meter__btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* ---------- Closing ---------- */
+.letter__close {
+  text-align: center;
+  color: var(--plum-soft);
+  max-width: 560px;
+  margin: 48px auto 0;
+}
+
+.letter__forever {
+  margin-top: 26px;
+  font-style: italic;
+}
+
+.letter__signature {
+  font-family: "Dancing Script", cursive;
+  font-size: 2.1rem;
+  color: var(--rose-dark);
+  margin-top: 4px;
+}
+
+.letter__note {
+  margin-top: 18px;
+  font-family: "Dancing Script", cursive;
+  font-size: 1.4rem;
+  color: var(--rose);
+  min-height: 1.6em;
+}
+
+/* ---------- Reveal on scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .floaters {
+    display: none;
+  }
+
+  .envelope__hint,
+  .envelope__seal::after {
+    animation: none;
+  }
+
+  .flip__inner {
+    transition: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .letter.visible {
+    animation: none;
+  }
+}
